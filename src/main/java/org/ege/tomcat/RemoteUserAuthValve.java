@@ -56,8 +56,7 @@ public class RemoteUserAuthValve extends ValveBase {
 
 	public void invoke(Request request, Response response) throws IOException,
 			ServletException {
-		HttpServletRequest httpServletRequest = (HttpServletRequest) request
-				.getRequest();
+		HttpServletRequest httpServletRequest = (HttpServletRequest) request.getRequest();
 		// get the remote IP
 		String remoteAdress = request.getRequest().getRemoteAddr();
 		// check if remote adress is allowed in our list
@@ -84,7 +83,12 @@ public class RemoteUserAuthValve extends ValveBase {
 				if (roleSeparator != null && role != null) {
 					String res[] = role.split(roleSeparator);
 					for (int i = 0; i < res.length; i++) {
-						roles.add(res[i]);
+						// extract role name from dn CN=RoleName,dc=*
+						//String rolesName[] = rolesDN[i].split(";");
+						int from = res[i].indexOf("=") +1 ;
+						int to = res[i].indexOf(",");
+						String roleName = res[i].substring(from,to).trim();
+						roles.add(roleName);
 					}
 				} else {
 					if (role != null)
