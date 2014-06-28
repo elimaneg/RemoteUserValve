@@ -78,35 +78,42 @@ public class RemoteUserAuthValve extends ValveBase {
 							+ request.getRequestURI());
 				if (user != null && role != null) {
 					if (log.isDebugEnabled())
-						log.debug("Found data User [ "
-								+ user + "] with role [ "
+						log.debug("Found data User ["
+								+ user + "] with role ["
 								+ role+"]");
 				}
 
 				if (roleSeparator != null && role != null) {
 					String res[] = role.split(roleSeparator);
 					for (int i = 0; i < res.length; i++) {
-						// extract role name from dn CN=RoleName,dc=*
+						//log.debug("Extracting role name from dn " +res[i]);
 						//String rolesName[] = rolesDN[i].split(";");
 						int from = res[i].indexOf("=") +1 ;
 						int to = res[i].indexOf(",");
 						String roleName = res[i].substring(from,to).trim();
+						log.debug("Extracted role name from dn " +res[i] + " is "+roleName);
 						roles.add(roleName);
 					}
 				} else {
-					if (role != null)
-						roles.add(role);
+					if (role != null){
+						int from = role.indexOf("=") +1 ;
+						int to = role.indexOf(",");
+						String roleName = role.substring(from,to).trim();
+						roles.add(roleName);
+					}
 				}
 				if (user != null) {
 					//request.setUserPrincipal(new GenericPrincipal(this
 					//		.getContainer().getRealm(), user, "", roles));
 					request.setUserPrincipal(new GenericPrincipal(user, "", roles));
+					log.debug("User " +user + " is set to have a GenericPrincipal");
 				} else if (!passThrough) {
 					if (log.isDebugEnabled())
-						log.debug("PassThrough disable, send 403 error");
+						log.debug("PassThrough disabled, send 403 error");
 					response.sendError(403);
 					return;
 				}
+				log.debug("Invocation de la prochaine valve");
 				getNext().invoke(request, response);
 				return;
 			}
