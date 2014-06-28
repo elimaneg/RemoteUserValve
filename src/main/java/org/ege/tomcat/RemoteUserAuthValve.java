@@ -119,6 +119,7 @@ public class RemoteUserAuthValve extends ValveBase {
 			}
 			// host is not in the allowed ip list 
 			response.sendError(403);
+			return;
 		}
 		// error 403 => host not autorized
 		if (flagAllows) response.sendError(403);
