@@ -9,3 +9,6 @@ Configuration attributes:
     roleSeparator (optional): see above.
     allows (optional): filter by remote IP. IP defined in this attribute are allowed (use "," separator for multiple IP). Just set the LemonLDAP::NG handler IP on this attribute in order to add more security. If this attribute is missed all hosts are allowed.
     passThrough (optional): Allow anonymous access or not. When it takes "false", HTTP headers have to be send by LemonLDAP to make authentication. So, if the user is not recognized or HTTP headers not present, a 403 error is sent.
+
+ <Valve className="org.ege.tomcat.RemoteUserAuthenticator" httpHeaderForSSOAuth="X-Forwarded-User" sessionCookieForSSOAuth="SMSESSION,CTSESSION,ObSSOCookie" />
+    

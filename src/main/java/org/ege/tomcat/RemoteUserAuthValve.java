@@ -12,13 +12,13 @@ import java.util.regex.PatternSyntaxException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.catalina.Session;
+import org.apache.catalina.authenticator.Constants;
 import org.apache.catalina.connector.Request;
 import org.apache.catalina.connector.Response;
 import org.apache.catalina.realm.GenericPrincipal;
 import org.apache.catalina.valves.ValveBase;
 import org.apache.juli.logging.Log;
-//import org.apache.commons.logging.Log;
-//import org.apache.commons.logging.LogFactory;
 import org.apache.juli.logging.LogFactory;
 
 //import org.apache.tomcat.util.compat.JdkCompat;
@@ -68,7 +68,8 @@ public class RemoteUserAuthValve extends ValveBase {
 			if (log.isDebugEnabled())
 				log.debug("Pattern "+allows[j].pattern()+" tested on  ip remote "+remoteAdress);
 			if (allows[j].matcher(remoteAdress).matches()) {
-
+				
+				//request.
 				Principal principal = request.getUserPrincipal();
 			    if (principal != null) {
 			          log.debug("User with id " + principal.getName() + " is already authenticated ");
@@ -114,8 +115,15 @@ public class RemoteUserAuthValve extends ValveBase {
 				if (user != null) {
 					//request.setUserPrincipal(new GenericPrincipal(this
 					//		.getContainer().getRealm(), user, "", roles));
-					request.setUserPrincipal(new GenericPrincipal(user, "", roles));
+					GenericPrincipal princ = new GenericPrincipal(user, "", roles);
+					request.setUserPrincipal(princ);
 					log.debug("User " +user + " is set to have a GenericPrincipal");
+					Session session = request.getSessionInternal(true);
+					log.debug("User " +user + " has new session with ID set to " + session.getId());
+					session.setNote(Constants.SESS_USERNAME_NOTE, user);
+					session.setPrincipal(princ);
+					//session.setNote(Constants.SESS_PASSWORD_NOTE, password);
+					//log.debug("User " +user + "  has session");
 				} else if (!passThrough) {
 					if (log.isDebugEnabled())
 						log.debug("PassThrough disabled, send 403 error");
