@@ -10,5 +10,26 @@ Configuration attributes:
     allows (optional): filter by remote IP. IP defined in this attribute are allowed (use "," separator for multiple IP). Just set the LemonLDAP::NG handler IP on this attribute in order to add more security. If this attribute is missed all hosts are allowed.
     passThrough (optional): Allow anonymous access or not. When it takes "false", HTTP headers have to be send by LemonLDAP to make authentication. So, if the user is not recognized or HTTP headers not present, a 403 error is sent.
 
- <Valve className="org.ege.tomcat.RemoteUserAuthenticator" httpHeaderForSSOAuth="X-Forwarded-User" sessionCookieForSSOAuth="SMSESSION,CTSESSION,ObSSOCookie" />
-    
+<Valve className="org.ege.tomcat.RemoteUserAuthenticator" httpHeaderForSSOAuth="X-Forwarded-User" sessionCookieForSSOAuth="SMSESSION,CTSESSION,ObSSOCookie" />
+Comme Authenticator
+HTTP_HEADER=org.ege.tomcat.RemoteUserAuthenticator dans org/apache/catalina/startup/Authenticators.properties
+tomcat-install/lib/catalina.jar as org/apache/catalina/startup/Authenticators.properties
+
+SPNEGO
+com.sun.security.jgss.krb5.initiate {
+    com.sun.security.auth.module.Krb5LoginModule required
+    doNotPrompt=true
+    principal="HTTP/win-tc01.dev.local@DEV.LOCAL"
+    useKeyTab=true
+    keyTab="c:/apache-tomcat-7.0.x/conf/tomcat.keytab"
+    storeKey=true;
+};
+
+com.sun.security.jgss.krb5.accept {
+    com.sun.security.auth.module.Krb5LoginModule required
+    doNotPrompt=true
+    principal="HTTP/win-tc01.dev.local@DEV.LOCAL"
+    useKeyTab=true
+    keyTab="c:/apache-tomcat-7.0.x/conf/tomcat.keytab"
+    storeKey=true;
+};   
