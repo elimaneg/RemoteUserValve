@@ -2,10 +2,10 @@ server.xml
 
 <Valve className="org.ege.tomcat.RemoteUserAuthValve" userKey="X-Forwarded-User" roleKey="X-Forwarded-Groups" roleSeparator=";" allows="127.0.0.1" />
 
-Configure attributes:
+Configuration attributes:
 
     userKey: key in the http header send by Web Server/Reverse Proxy in order to store user login.
-    roleKey: key in the http header send by Web Server/Reverse Proxy in order to store roles. If Web Server/Reverse Proxy sends some roles split by some commas, use roleSeparator.
+    roleKey: key in the http header send by Web Server/Reverse Proxy in order to store roles. If the Web Server/Reverse Proxy sends a heder containing the user'roles (separated by roleSeparator).
     roleSeparator (optional): see above.
-    allows (optional): filter remote IP. IP defined in this attribute are allowed (use "," separator for multiple IP). Just set the LemonLDAP::NG handler IP on this attribute in order to add more security. If this attribute is missed all hosts are allowed.
-    passThrough (optional): Allow anonymous access or not. When it takes "false", HTTP headers have to be send by LemonLDAP to make authentication. So, if the user is not recognized or HTTP headers not present, a 403 error is send.
+    allows (optional): filter by remote IP. IP defined in this attribute are allowed (use "," separator for multiple IP). Just set the LemonLDAP::NG handler IP on this attribute in order to add more security. If this attribute is missed all hosts are allowed.
+    passThrough (optional): Allow anonymous access or not. When it takes "false", HTTP headers have to be send by LemonLDAP to make authentication. So, if the user is not recognized or HTTP headers not present, a 403 error is sent.

@@ -3,6 +3,7 @@ package org.ege.tomcat;
 import java.io.IOException;
 import java.lang.Boolean;
 import java.lang.String;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -68,6 +69,14 @@ public class RemoteUserAuthValve extends ValveBase {
 				log.debug("Pattern "+allows[j].pattern()+" tested on  ip remote "+remoteAdress);
 			if (allows[j].matcher(remoteAdress).matches()) {
 
+				Principal principal = request.getUserPrincipal();
+			    if (principal != null) {
+			          log.debug("User with id " + principal.getName() + " is already authenticated ");
+			          getNext().invoke(request, response);
+			        return;
+			    } else {
+			    	log.debug("Unknown User is accessing instance for first time");
+			    }
 				List<String> roles = new ArrayList<String>();
 				// retrieve user and role
 				String user = httpServletRequest.getHeader(userKey);
