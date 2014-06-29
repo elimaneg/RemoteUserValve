@@ -1,0 +1,1 @@
+git pull && mvn clean package  && scp target/*.jar  jboss@lcom501d://data/jboss/tomcat-spnego/libs
